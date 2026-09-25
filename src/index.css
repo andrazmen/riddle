@@ -1,0 +1,107 @@
+:root {
+  --text: #4a4d54;
+  --text-h: #4a4d54;
+  --bg: #ffffff;
+  --border: rgba(191, 151, 192, 0.45);
+
+  --accent: #bf97c0;
+  --accent-bg: rgba(191, 151, 192, 0.1);
+  --accent-border: rgba(191, 151, 192, 0.5);
+
+  --sans: "Cormorant Garamond", serif;
+  --heading: "Cormorant Garamond", serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+
+  color-scheme: light;
+  color: var(--text);
+  background: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  min-height: 100svh;
+
+  margin: 0 auto;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  text-align: center;
+
+  border-inline: 1px solid rgba(191, 151, 192, 0.45);
+
+  /* CVETLIČNI FRAME */
+  background-color: #ffffff;
+  background-image: url("../src/assets/frame.png");
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100% auto;
+}
+
+h1,
+h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  color: #4a4d54;
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: #f8f5f8;
+}
