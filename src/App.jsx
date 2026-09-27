@@ -58,7 +58,6 @@ function App() {
   const passwordRef = useRef(null);
   const invitationRef = useRef(null);
   const riddleRefs = useRef({});
-  const inputRefs = useRef({});
 
   const handleSubmit = (riddle) => {
     const userAnswer = (answers[riddle.id] || "").trim().toLowerCase();
@@ -85,10 +84,6 @@ function App() {
             behavior: "smooth",
             block: "center",
           });
-
-          setTimeout(() => {
-            inputRefs.current[nextRiddle.id]?.focus();
-          }, 800);
         }
       }, 600);
     } else {
@@ -132,9 +127,9 @@ function App() {
     setTimeout(() => {
       invitationRef.current?.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: "start",
       });
-    }, 1500);
+    }, 2000);
 
     // še en val konfetov pri vabilu
     setTimeout(() => {
@@ -297,7 +292,6 @@ function App() {
                   <>
                     <div className="answer-row">
                       <input
-                        ref={(el) => (inputRefs.current[riddle.id] = el)}
                         type="text"
                         placeholder="Tvoj odgovor..."
                         value={answers[riddle.id] || ""}
