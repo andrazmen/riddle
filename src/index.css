@@ -50,10 +50,10 @@ body {
 
   border-inline: 1px solid rgba(191, 151, 192, 0.45);
 
-  /* CVETLIČNI FRAME */
   background-color: #ffffff;
+
   background-image: url("../src/assets/frame.png");
-  background-repeat: no-repeat;
+  background-repeat: repeat-y;
   background-position: top center;
   background-size: 100% auto;
 }

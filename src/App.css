@@ -84,6 +84,7 @@ input {
 ========================= */
 
 .riddles {
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -276,6 +277,37 @@ input {
   line-height: 1;
 }
 
+.solution {
+  display: flex;
+  align-items: center;
+
+  color: #4a4d54;
+
+  font-family: "Cormorant Garamond", serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.solution strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 45px;
+  height: 50px;
+  margin: 0 3px;
+  padding: 0 8px;
+
+  border: 1px solid #bf97c0;
+
+  background: #faf5fa;
+  color: #9e729f;
+
+  font-family: "Cormorant Garamond", serif;
+  font-size: 28px;
+  font-weight: 700;
+}
+
 /* =========================
    PASSWORD
 ========================= */
@@ -352,7 +384,6 @@ input {
 ========================= */
 
 .invitation {
-  margin-top: 70px;
   padding: 55px 40px;
 
   text-align: center;
@@ -399,6 +430,23 @@ input {
   font-weight: 500;
   line-height: 1.55;
 }
+
+.invitation.reveal {
+  animation: invitationReveal 1.2s ease forwards;
+}
+
+@keyframes invitationReveal {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* =========================
    EVENT CARD
 ========================= */

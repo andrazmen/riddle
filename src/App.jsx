@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import confetti from "canvas-confetti";
 import "./App.css";
 
 const riddles = [
@@ -13,10 +14,10 @@ const riddles = [
   {
     id: 2,
     question:
-      "Ne potrebujem besed, da se pokažem. Ne potrebujem darila, da jo začutim. Lahko boli, lahko zdravi, a brez mene je svet precej bolj prazen.",
-    answer: "ljubezen",
-    letter: "U",
-    revealPositions: [3],
+      "Na poročni dan me vsi želijo, mladoporočencema z željami me podarijo. Ne najdeš me v zlatu ali cvetju, temveč v ljubezni in lepem spominu.",
+    answer: "sreča",
+    letter: "S",
+    revealPositions: [0],
   },
   {
     id: 3,
@@ -30,9 +31,9 @@ const riddles = [
     id: 4,
     question:
       "Nimam vezi, pa dva povežem. Nimam rok, pa zavežem za vse življenje. Izrečena sem z besedami, a moja teža se meri z dejanji.",
-    answer: "prisega",
-    letter: "S",
-    revealPositions: [0],
+    answer: "zaobljuba",
+    letter: "U",
+    revealPositions: [3],
   },
   {
     id: 5,
@@ -52,6 +53,12 @@ function App() {
   const [answers, setAnswers] = useState({});
   const [solved, setSolved] = useState({});
   const [error, setError] = useState({});
+  const [celebrated, setCelebrated] = useState(false);
+
+  const passwordRef = useRef(null);
+  const invitationRef = useRef(null);
+  const riddleRefs = useRef({});
+  const inputRefs = useRef({});
 
   const handleSubmit = (riddle) => {
     const userAnswer = (answers[riddle.id] || "").trim().toLowerCase();
@@ -66,6 +73,24 @@ function App() {
         ...prev,
         [riddle.id]: false,
       }));
+
+      // premik na naslednjo uganko
+      setTimeout(() => {
+        const nextRiddle = riddles.find(
+          (item) => item.id > riddle.id && !solved[item.id],
+        );
+
+        if (nextRiddle) {
+          riddleRefs.current[nextRiddle.id]?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          setTimeout(() => {
+            inputRefs.current[nextRiddle.id]?.focus();
+          }, 800);
+        }
+      }, 600);
     } else {
       setError((prev) => ({
         ...prev,
@@ -83,6 +108,70 @@ function App() {
 
   const allSolved = riddles.every((riddle) => solved[riddle.id]);
 
+  const celebrate = () => {
+    // 1. skok na geslo
+    setTimeout(() => {
+      passwordRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 300);
+
+    // 2. konfeti
+    setTimeout(() => {
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: {
+          y: 0.3,
+        },
+      });
+    }, 700);
+
+    // 3. počasen premik do vabila
+    setTimeout(() => {
+      invitationRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 1500);
+
+    // še en val konfetov pri vabilu
+    setTimeout(() => {
+      confetti({
+        particleCount: 100,
+        spread: 120,
+        origin: {
+          y: 0.2,
+        },
+      });
+    }, 3000);
+  };
+
+  const highlightLetter = (riddle) => {
+    const answer = riddle.answer;
+    const index = answer.toLowerCase().indexOf(riddle.letter.toLowerCase());
+
+    if (index === -1) {
+      return answer;
+    }
+
+    return (
+      <>
+        {answer.slice(0, index)}
+        <strong>{answer[index]}</strong>
+        {answer.slice(index + 1)}
+      </>
+    );
+  };
+
+  useEffect(() => {
+    if (allSolved && !celebrated) {
+      setCelebrated(true);
+      celebrate();
+    }
+  }, [allSolved, celebrated]);
+
   return (
     <main className="page">
       <div className="container">
@@ -99,9 +188,50 @@ function App() {
           <p>Reši vseh pet ugank in razkrij presenečenje!</p>
         </header>
 
+        {/* KONČNO GESLO */}
+        <section className="password-section" ref={passwordRef}>
+          <div className="password-label">KONČNO GESLO</div>
+
+          <div className="password">
+            {password.split("").map((character, index) => {
+              // Pika je vedno vidna.
+              if (character === ".") {
+                return (
+                  <span className="password-character punctuation" key={index}>
+                    .
+                  </span>
+                );
+              }
+
+              const revealed = isPositionRevealed(index);
+
+              return (
+                <span
+                  className={`password-character ${revealed ? "revealed" : ""}`}
+                  key={index}
+                >
+                  {revealed ? character : "_"}
+                </span>
+              );
+            })}
+          </div>
+
+          <div className="password-spacer">
+            {/* Samo vizualni presledek med SV. in URH */}
+          </div>
+
+          <p>
+            {allSolved
+              ? "Vse uganke so rešene."
+              : `Rešenih ugank: ${
+                  Object.keys(solved).length
+                } / ${riddles.length}`}
+          </p>
+        </section>
+
         {/* POVABILO */}
         {allSolved && (
-          <section className="invitation">
+          <section className="invitation reveal" ref={invitationRef}>
             <div className="invitation-icon">✦</div>
 
             <div className="eyebrow">ČESTITAVA!</div>
@@ -146,51 +276,11 @@ function App() {
           </section>
         )}
 
-        {/* KONČNO GESLO */}
-        <section className="password-section">
-          <div className="password-label">KONČNO GESLO</div>
-
-          <div className="password">
-            {password.split("").map((character, index) => {
-              // Pika je vedno vidna.
-              if (character === ".") {
-                return (
-                  <span className="password-character punctuation" key={index}>
-                    .
-                  </span>
-                );
-              }
-
-              const revealed = isPositionRevealed(index);
-
-              return (
-                <span
-                  className={`password-character ${revealed ? "revealed" : ""}`}
-                  key={index}
-                >
-                  {revealed ? character : "_"}
-                </span>
-              );
-            })}
-          </div>
-
-          <div className="password-spacer">
-            {/* Samo vizualni presledek med SV. in URH */}
-          </div>
-
-          <p>
-            {allSolved
-              ? "Vse uganke so rešene."
-              : `Rešenih ugank: ${
-                  Object.keys(solved).length
-                } / ${riddles.length}`}
-          </p>
-        </section>
-
         {/* UGANKЕ */}
         <section className="riddles">
           {riddles.map((riddle) => (
             <article
+              ref={(el) => (riddleRefs.current[riddle.id] = el)}
               className={`riddle ${solved[riddle.id] ? "solved" : ""}`}
               key={riddle.id}
             >
@@ -207,6 +297,7 @@ function App() {
                   <>
                     <div className="answer-row">
                       <input
+                        ref={(el) => (inputRefs.current[riddle.id] = el)}
                         type="text"
                         placeholder="Tvoj odgovor..."
                         value={answers[riddle.id] || ""}
@@ -235,8 +326,9 @@ function App() {
                 ) : (
                   <div className="revealed-letter">
                     <div>
-                      <span>Pridobljena črka</span>
-                      <strong>{riddle.letter}</strong>
+                      <span>Rešitev</span>
+
+                      <div className="solution">{highlightLetter(riddle)}</div>
                     </div>
 
                     <div className="success">✓</div>
