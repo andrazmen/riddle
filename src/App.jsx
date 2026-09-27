@@ -121,7 +121,7 @@ function App() {
           y: 0.3,
         },
       });
-    }, 700);
+    }, 1000);
 
     // 3. počasen premik do vabila
     setTimeout(() => {
@@ -129,7 +129,7 @@ function App() {
         behavior: "smooth",
         block: "start",
       });
-    }, 2000);
+    }, 3000);
 
     // še en val konfetov pri vabilu
     setTimeout(() => {
@@ -140,7 +140,7 @@ function App() {
           y: 0.2,
         },
       });
-    }, 3000);
+    }, 4000);
   };
 
   const highlightLetter = (riddle) => {
